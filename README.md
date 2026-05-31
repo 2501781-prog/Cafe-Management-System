@@ -86,14 +86,6 @@ This Cafe Management System is a modular Java desktop application for managing a
 
 ---
 
-## GitHub Push Order
-1. Imman  → creates repo, pushes Student1_Imman_Auth_Dashboard/
-2. Zainab → clones, pushes Student2_Zainab_Menu_Inventory/
-3. Fatima  → clones, pushes Student3_Fatima_Order_Management/
-4. GulNaaz → clones, pushes Student4_GulNaz_Billing_Reports/ (final integrated version)
-
----
-
 ## Common Issues & Fixes
 - **MySQL JDBC Driver not found**: Add MySQL Connector/J JAR in NetBeans project libraries.
 - **Access denied for user root**: Update username/password in `DBConnection.java`.

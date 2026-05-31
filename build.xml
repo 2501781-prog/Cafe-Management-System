@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="CafeManagementSystem_M1_Ahmad" default="default" basedir=".">
+    <description>Module 1 - Authentication and Dashboard (Ahmad Ali)</description>
+    <import file="nbproject/build-impl.xml"/>
+</project>

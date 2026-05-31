@@ -1,121 +1,109 @@
-
 # Cafe Management System
-## Student 1 — Imman | Module 1: Authentication & Dashboard
+## Student 2 — Zainab | Module 2: Menu & Inventory Management
 
-### Initial Commit — Project Foundation
-
----
-
-## What Imman Did
-
-Imman created the **entire project from scratch**. This is the first commit.
-She set up the project structure, all shared infrastructure, and built Module 1 (Authentication & Dashboard).
-
-Every other student cloned this and built on top of it.
+### Second Commit — Menu CRUD + NetBeans Drag-and-Drop Inventory Form
 
 ---
 
-## Files Created in This Commit
+## What Zainab Did
 
-### Shared Infrastructure (used by all modules)
+Zainab **cloned Imman's project** and added Module 2 on top of it.
+She built the complete menu management screen and also created an inventory form
+using **NetBeans drag-and-drop GUI designer** (the `.form` file approach).
+
+---
+
+## New Files Added in This Commit
+
 ```
-src/com/cafe/database/
-  DBConnection.java          ← connects to MySQL, used by ALL services
-
-src/com/cafe/models/
-  Customer.java              ← customer data (name, phone, email, address)
-  MenuItem.java              ← menu item (name, category, price, available)
-  Order.java                 ← one order (customer + items + total)
-  OrderItem.java             ← one item inside an order (qty, price, total)
-  Bill.java                  ← generates formatted bill text
-
-src/com/cafe/utils/
-  UIUtils.java               ← colors, fonts, button styles (used by all panels)
-  MessageUtils.java          ← popup messages (error, success, confirm)
-  ValidationUtils.java       ← input validation helpers
-  DateTimeUtils.java         ← date formatting
-
 src/com/cafe/services/
-  BaseService.java           ← abstract CRUD contract (all services extend this)
-
-database/
-  cafe_management.sql        ← full database schema + sample data + users table
-```
-
-### Module 1 — Imman's Own Work
-```
-src/com/cafe/utils/
-  SessionManager.java        ← stores who is logged in (global static)
-
-src/com/cafe/services/
-  AuthService.java           ← checks username/password against users table
-  DashboardService.java      ← counts customers, orders, revenue for dashboard
+  MenuService.java           ← full CRUD for menu items (6 methods)
 
 src/com/cafe/gui/
-  LoginPanel.java            ← login screen (JFrame) — app entry point
-  MainDashboard.java         ← main window with CardLayout + sidebar navigation
-  DashboardPanel.java        ← home screen with 4 summary cards + recent orders
+  MenuPanel.java             ← menu management screen (JPanel with JTable + form)
+
+Inventory.java               ← NetBeans drag-and-drop inventory form (JFrame)
+Inventory.form               ← NetBeans Form Editor file (visual designer data)
 ```
+
+---
+
+## What Changed vs Student 1
+
+| What | Student 1 (Imman) | Student 2 (Zainab) |
+|------|-------------------|------------------|
+| Menu management | Not present | ✅ Full CRUD screen |
+| Inventory form | Not present | ✅ NetBeans drag-and-drop form |
+| Sidebar navigation | Dashboard only | ✅ + Menu & Inventory button |
+| MenuService | Only `getAvailableItems()` | ✅ Full 6-method service |
+
+---
+
+## About Inventory.java and Inventory.form
+
+These two files are created by **NetBeans Form Editor** (drag-and-drop GUI designer).
+
+**How it works:**
+1. In NetBeans: right-click package → New → JFrame Form
+2. Drag components (JLabel, JTextField, JButton, JTable) onto the canvas
+3. NetBeans generates two files:
+   - `Inventory.form` — XML file storing the visual layout (don't edit manually)
+   - `Inventory.java` — Java code generated from the form (the `initComponents()` method)
+
+**What the Inventory form contains:**
+- A JTable (`table_inventory`) with columns: ID, Item Name, Price, Quantity
+- Three text fields for entering item name, price, quantity
+- Three buttons: Add Item, Update, Delete
+
+**Why use drag-and-drop?**
+For simple forms, NetBeans Form Editor is faster than writing layout code manually.
+The generated `initComponents()` method handles all the layout automatically.
+
+**Important:** The `Inventory.form` file must stay alongside `Inventory.java`.
+NetBeans uses the `.form` file to re-open the visual designer.
+
+---
+
+## MenuService.java — 6 Methods
+
+| Method | SQL | Purpose |
+|--------|-----|---------|
+| `addItem(item)` | INSERT | Add new menu item |
+| `updateItem(item)` | UPDATE | Edit existing item |
+| `deleteItem(id)` | DELETE | Remove item |
+| `getAllItems()` | SELECT * | Load all for table |
+| `search(keyword)` | SELECT WHERE LIKE | Search by name/category |
+| `getAvailableItems()` | SELECT WHERE available=TRUE | Used by Module 3 |
+
+---
+
+## MenuPanel.java — How It Works
+
+1. Opens → loads all menu items into JTable
+2. User clicks a row → form fields fill automatically (ListSelectionListener)
+3. User edits fields → clicks Update or Delete
+4. User fills empty form → clicks Add Item
+5. Search bar → filters table in real time
 
 ---
 
 ## How to Run This Version
 
-1. Open XAMPP → Start MySQL
-2. Open phpMyAdmin → Import `database/cafe_management.sql`
-3. Open project in NetBeans
-4. Add `mysql-connector-j.jar` to project libraries
-5. Right-click `LoginPanel.java` → Run File
-6. Login: `admin` / `admin123`
-
-**What you'll see:** Login screen → Dashboard with summary cards.
-Sidebar has only "Dashboard" working. Other buttons are placeholders until other students add their modules.
+Same as Student 1, but now:
+- Click **"MN  Menu & Inventory"** in the sidebar
+- You can add, edit, delete, search menu items
+- The Inventory form can be opened separately from `Inventory.java`
 
 ---
 
+## Integration Point for Module 3
+
+`MenuService.getAvailableItems()` is called by Fatima's `OrderPanel` to populate the order menu.
+the item dropdown. If Zainab Raza marks an item unavailable, it won't appear in orders.
+
+---
 
 ## What's NOT in This Version Yet
 
-- No menu management (Zainab adds this in Student 2)
-- No order placement (Fatima adds this in Student 3)
-- No sales reports (GulNaaz adds this in Student 4)
-
----
-
-## Database Tables Created
-
-```sql
-users        ← login accounts (admin/admin123, staff1/staff123)
-customers    ← customer records (sample data included)
-menu_items   ← food/drink items (8 sample items)
-orders       ← order headers
-order_items  ← items within each order
-```
-
----
-
-## Key Technical Decisions
-
-**Why CardLayout?**
-The university requires a single integrated window. CardLayout lets all 4 modules
-share one window — switching panels without opening new windows.
-
-**Why BaseService<T>?**
-Provides a common contract for CRUD operations, making the codebase extensible and maintainable.
-Defines a common CRUD contract. Every service must implement add(), update(), delete(),
-search(), getAll(). Enforces consistency across all modules.
-
-**Why SessionManager as static?**
-After login, any module needs to know who is logged in. A static class provides
-one global copy accessible from anywhere without passing objects around.
-
-**Why PreparedStatement everywhere?**
-Prevents SQL injection. All `?` placeholders are filled safely by JDBC.
-
----
-
-## Login Credentials
-```
-Username: admin     Password: admin123   (role: admin)
-Username: staff1    Password: staff123   (role: staff)
-```
+- No order placement (Usman adds this in Student 3)
+- No sales reports (Zainab adds this in Student 4)

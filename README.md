@@ -1,174 +1,107 @@
-# Cafe Management System
-## Student 4 — Zainab Raza | Module 4: Billing & Reports (Sales Analytics)
-### Final Commit — Admin Login + Sales Dashboard + Custom Bar Chart
+
+
+# Cafe Management System — Final Documentation
+
+Professional Java OOP desktop project using **Java Swing** and **MySQL JDBC**.
 
 ---
 
-## What Zainab Did
-
-Zainab **cloned Usman's project** (which had all 3 previous modules) and added
-Module 4 — the final piece. This is the **complete, fully integrated project**.
-
-She built a secure admin-only sales analytics dashboard with a custom bar chart
-drawn using Java2D (no external library), date range filtering, and revenue reports.
-
----
-
-## New Files Added in This Commit
-
-```
-src/com/cafe/services/
-  SalesReportService.java    ← 5 SQL queries for revenue analytics
-
-src/com/cafe/gui/
-  AdminLoginDialog.java      ← secure modal login before accessing reports
-  BarChartPanel.java         ← custom bar chart using Java2D paintComponent
-  SalesReportPanel.java      ← full sales dashboard (cards + chart + tables)
-```
+## Table of Contents
+- [Project Overview](#project-overview)
+- [Requirements](#requirements)
+- [Setup & Installation](#setup--installation)
+- [Modules & Contributors](#modules--contributors)
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [How to Run](#how-to-run)
+- [GitHub Push Order](#github-push-order)
+- [Common Issues & Fixes](#common-issues--fixes)
 
 ---
 
-## What Changed vs Student 3
-
-| What | Student 3 (Usman) | Student 4 (Zainab) |
-|------|-------------------|---------------------|
-| Sales analytics | Not present | ✅ Full dashboard |
-| Admin login | Not present | ✅ Modal login dialog |
-| Bar chart | Not present | ✅ Custom Java2D chart |
-| Revenue by category | Not present | ✅ Category breakdown table |
-| Top selling items | Not present | ✅ Top 5 items table |
-| Sidebar navigation | Dashboard+Menu+Customers+Orders | ✅ + Sales & Reports |
+## Project Overview
+This Cafe Management System is a modular Java desktop application for managing authentication, menu/inventory, orders, billing, and sales analytics. It is designed for educational purposes, demonstrating OOP, GUI, and database integration.
 
 ---
 
-## This Is the FINAL Version
-
-Student 4's folder contains the complete project with all 4 modules integrated:
-
-```
-Module 1 (Ahmad):  Login → Dashboard
-Module 2 (Sara):   Menu & Inventory management
-Module 3 (Usman):  Customer management + Order placement + Bills
-Module 4 (Zainab): Sales analytics + Admin login + Bar chart
-```
+## Requirements
+- **Java JDK 17+**
+- **Apache NetBeans 21** (or compatible IDE)
+- **XAMPP** (MySQL & Apache)
+- **MySQL Connector/J** (already included in `lib/`)
 
 ---
 
-## SalesReportPanel — What the Admin Sees
-
-```
-┌──────────────────────────────────────────────────────────────┐
-│  Sales & Reports          [From: ____] [To: ____] [Generate] │
-├──────────┬──────────┬──────────┬───────────────────────────  │
-│ Rs.2050  │ 4 orders │ Rs.512   │ Rs.950 today               │
-│ Revenue  │  Total   │ Avg Order│ Today                      │
-├──────────┴──────────┴──────────┴───────────────────────────  │
-│  ████  ██  ████  ██  ████   ← Bar Chart (daily revenue)     │
-│  21    22  23    24  25                                      │
-├─────────────────────┬────────────────────────────────────────│
-│ Top 5 Items         │ Revenue by Category                   │
-│ 1. Cappuccino  12   │ Coffee      Rs.5400                   │
-│ 2. Club Sand.   8   │ Fast Food   Rs.3200                   │
-└─────────────────────┴────────────────────────────────────────┘
-```
+## Setup & Installation
+1. Install XAMPP and start MySQL and Apache.
+2. Open phpMyAdmin at [http://localhost/phpmyadmin](http://localhost/phpmyadmin).
+3. Import the SQL schema: `database/cafe_management.sql`.
+4. Open the project folder in NetBeans (preferably Student4_GulNaz_Billing_Reports for the final version).
+5. Ensure `lib/mysql-connector-j-9.7.0.jar` is added to project libraries.
+6. Update database credentials in `src/com/cafe/database/DBConnection.java` if needed.
+7. Clean and Build, then Run Project (F6).
+8. Login with: `admin` / `admin123`.
 
 ---
 
-## AdminLoginDialog — How the Security Works
-
-When the user clicks "SA  Sales & Reports" in the sidebar:
-1. `AdminLoginDialog` opens as a **modal JDialog** (freezes the main window)
-2. User must type `admin` / `admin123`
-3. If wrong: error message shown, try again
-4. If correct: `isAuthenticated()` returns true, sales panel opens
-
-```java
-salesButton.addActionListener(e -> {
-    AdminLoginDialog login = new AdminLoginDialog(MainDashboard.this);
-    login.setVisible(true);          // blocks here until dialog closes
-    if (login.isAuthenticated()) {   // check result
-        salesReportPanel.generateReport();
-        cardLayout.show(contentPanel, "SALES");
-    }
-});
-```
+## Modules & Contributors
+- **Student 1 — Imman**: Authentication & Dashboard ([Student1_Imman_Auth_Dashboard/](Student1_Imman_Auth_Dashboard/))
+- **Student 2 — Zainab**: Menu & Inventory Management ([Student2_Zainab_Menu_Inventory/](Student2_Zainab_Menu_Inventory/))
+- **Student 3 — Fatima**: Order Management ([Student3_Fatima_Order_Management/](Student3_Fatima_Order_Management/))
+- **Student 4 — GulNaaz**: Billing & Reports (Sales Analytics) ([Student4_GulNaz_Billing_Reports/](Student4_GulNaz_Billing_Reports/))
 
 ---
 
-## BarChartPanel — Custom Chart Without Any Library
-
-The bar chart is drawn using Java's built-in `Graphics2D` — no external library needed.
-
-```java
-public class BarChartPanel extends JPanel {
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
-        // Bar height = (value / maxValue) × chartHeight
-        // GradientPaint for blue gradient fill
-        // fillRoundRect for rounded corners
-    }
-}
-```
-
-Call `barChart.setData(labels, values, title)` to update → triggers `repaint()` → redraws.
+## Features
+- User authentication (admin login)
+- Dashboard with summary cards (customers, orders, revenue, menu items)
+- Menu & inventory CRUD (add, update, delete, search)
+- Customer management (CRUD, search)
+- Order placement with cart, item selection, and bill generation
+- Sales analytics: revenue, top items, category breakdown, custom bar chart
+- Secure admin-only access to reports
+- Modular OOP design (encapsulation, inheritance, abstraction, polymorphism)
+- All SQL operations use PreparedStatement for security
 
 ---
 
-## SalesReportService — 5 SQL Queries
-
-| Method | SQL Used | Purpose |
-|--------|----------|---------|
-| `getDailyRevenue(date)` | `SUM(total_amount) WHERE DATE = ?` | Today's revenue card |
-| `getRangeSummary(from, to)` | `SUM, COUNT, AVG WHERE BETWEEN` | 3 summary cards |
-| `getRevenueByDateRange(from, to)` | `GROUP BY DATE(order_datetime)` | Bar chart data |
-| `getTopSellingItems(from, to, 5)` | `JOIN + GROUP BY item + ORDER BY qty DESC LIMIT 5` | Top items table |
-| `getRevenueByCategory(from, to)` | `JOIN + GROUP BY category` | Category table |
+## Project Structure
+- `src/com/cafe/gui/` — GUI panels and dialogs
+- `src/com/cafe/models/` — Domain classes
+- `src/com/cafe/database/` — JDBC connection
+- `src/com/cafe/services/` — Service/DAO layer
+- `src/com/cafe/utils/` — Utilities
+- `database/` — SQL schema and sample data
+- `lib/` — MySQL Connector/J
 
 ---
 
-## How to Run the Complete Final Project
-
-1. Open XAMPP → Start MySQL + Apache
+## How to Run
+1. Open XAMPP → Start MySQL and Apache
 2. Open phpMyAdmin → Import `database/cafe_management.sql`
-3. Open project in NetBeans
-4. Add `mysql-connector-j.jar` to project libraries
-5. Right-click `MainDashboard.java` → Run File
+3. Open the project in NetBeans (preferably Student4_GulNaz_Billing_Reports)
+4. Add `mysql-connector-j-9.7.0.jar` to project libraries if not already present
+5. Clean and Build, then Run Project (F6)
 6. Login: `admin` / `admin123`
-7. Navigate all 4 modules from the sidebar
-
-**All 4 modules are fully functional in this version.**
 
 ---
 
-## Complete File List (All Modules)
-
-```
-src/com/cafe/
-├── database/   DBConnection.java
-├── models/     Bill, Customer, MenuItem, Order, OrderItem
-├── utils/      DateTimeUtils, MessageUtils, SessionManager, UIUtils, ValidationUtils
-├── services/   AuthService, BaseService, CustomerService, DashboardService,
-│               MenuService, OrderService, SalesReportService
-└── gui/        AdminLoginDialog, BarChartPanel, BillDialog, CustomerPanel,
-                DashboardPanel, LoginPanel, MainDashboard, MenuPanel,
-                OrderPanel, SalesReportPanel
-
-Inventory.java   ← Sara's NetBeans drag-and-drop inventory form
-Inventory.form   ← NetBeans Form Editor visual designer file
-database/        cafe_management.sql
-```
+## GitHub Push Order
+1. Imman  → creates repo, pushes Student1_Imman_Auth_Dashboard/
+2. Zainab → clones, pushes Student2_Zainab_Menu_Inventory/
+3. Fatima  → clones, pushes Student3_Fatima_Order_Management/
+4. GulNaaz → clones, pushes Student4_GulNaz_Billing_Reports/ (final integrated version)
 
 ---
 
-## GitHub Push Order (for the team)
+## Common Issues & Fixes
+- **MySQL JDBC Driver not found**: Add MySQL Connector/J JAR in NetBeans project libraries.
+- **Access denied for user root**: Update username/password in `DBConnection.java`.
+- **Unknown database**: Run `database/cafe_management.sql`.
+- **Communications link failure**: Start MySQL server and confirm port `3306`.
+- **Cannot delete customer**: Customer has existing orders; delete linked orders first or keep the customer for history.
 
-```
-1. Ahmad  → creates repo, pushes Student1_Ahmad_Auth_Dashboard/
-2. Sara   → clones, pushes Student2_Sara_Menu_Inventory/ (includes Ahmad's files + her additions)
-3. Usman  → clones, pushes Student3_Usman_Order_Management/ (includes Sara's files + his additions)
-4. Zainab → clones, pushes Student4_Zainab_Billing_Reports/ (includes Usman's files + her additions)
-```
+---
 
-The final `src/` at the root = identical to Student 4's `src/` = the complete project.
+## Credits
+This project was developed as a university OOP lab project by Imman, Zainab, Fatima, and GulNaaz.

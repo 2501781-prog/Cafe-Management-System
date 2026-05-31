@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -24,35 +25,48 @@ import javax.swing.table.JTableHeader;
 
 public final class UIUtils {
     public static final String FONT_FAMILY = "Segoe UI";
-    public static final Color SIDEBAR = new Color(20, 27, 45);
-    public static final Color SIDEBAR_HOVER = new Color(38, 50, 78);
-    public static final Color BACKGROUND = new Color(246, 248, 252);
+    
+    // Modern, high-contrast color palette
+    public static final Color SIDEBAR = new Color(15, 23, 42);         
+    public static final Color SIDEBAR_HOVER = new Color(30, 41, 59);   
+    public static final Color BACKGROUND = new Color(243, 244, 246);   
     public static final Color SURFACE = Color.WHITE;
-    public static final Color BORDER = new Color(221, 228, 238);
-    public static final Color PRIMARY = new Color(37, 99, 235);
-    public static final Color PRIMARY_HOVER = new Color(29, 78, 216);
-    public static final Color SUCCESS = new Color(22, 163, 74);
-    public static final Color WARNING = new Color(217, 119, 6);
-    public static final Color DANGER = new Color(220, 38, 38);
-    public static final Color MUTED = new Color(100, 116, 139);
-    public static final Color TEXT = new Color(15, 23, 42);
-    public static final Color TABLE_STRIPE = new Color(249, 251, 255);
+    public static final Color BORDER = new Color(229, 231, 235);       
+    
+    public static final Color PRIMARY = new Color(79, 70, 229);        
+    public static final Color PRIMARY_HOVER = new Color(67, 56, 202);  
+    public static final Color SUCCESS = new Color(16, 185, 129);       
+    public static final Color WARNING = new Color(245, 158, 11);       
+    public static final Color DANGER = new Color(239, 68, 68);         
+    
+    public static final Color MUTED = new Color(100, 116, 139);   
+    public static final Color TEXT = new Color(15, 23, 42);       
+    public static final Color TABLE_STRIPE = new Color(248, 250, 252); 
 
     private UIUtils() {
     }
 
     public static JButton createButton(String text, Color color) {
         JButton button = new JButton(text);
-        Color hover = color.darker();
+        
+        Color hover = (color.equals(PRIMARY)) ? PRIMARY_HOVER : color.darker();
+        
         button.setBackground(color);
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
+        button.setBorderPainted(false); 
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.setFont(new Font(FONT_FAMILY, Font.BOLD, 13));
         button.setOpaque(true);
         button.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(color.darker()),
-                BorderFactory.createEmptyBorder(10, 16, 10, 16)));
+                BorderFactory.createLineBorder(hover),
+                BorderFactory.createEmptyBorder(8, 24, 8, 24))); // Increased horizontal padding
+                
+        // Force a strict minimum size so layout managers can't crush the button
+        Dimension prefSize = button.getPreferredSize();
+        button.setPreferredSize(new Dimension(Math.max(120, prefSize.width), 38));
+        button.setMinimumSize(new Dimension(100, 38));
+        
         installHover(button, color, hover);
         return button;
     }
@@ -63,10 +77,14 @@ public final class UIUtils {
     }
 
     public static JButton createNavButton(String text) {
-        JButton button = createButton(text, new Color(30, 41, 59));
+        JButton button = createButton(text, SIDEBAR);
         button.setHorizontalAlignment(SwingConstants.LEFT);
         button.setBorder(BorderFactory.createEmptyBorder(12, 16, 12, 16));
-        installHover(button, new Color(30, 41, 59), SIDEBAR_HOVER);
+        
+        // Nav buttons usually span the width of the sidebar, so we give them a taller height
+        button.setPreferredSize(new Dimension(200, 42)); 
+        
+        installHover(button, SIDEBAR, SIDEBAR_HOVER);
         return button;
     }
 
@@ -84,43 +102,58 @@ public final class UIUtils {
     }
 
     public static void styleTextField(JTextField field) {
-        field.setFont(new Font(FONT_FAMILY, Font.PLAIN, 13));
+        field.setFont(new Font(FONT_FAMILY, Font.PLAIN, 14)); // Slightly larger font for readability
         field.setForeground(TEXT);
         field.setCaretColor(PRIMARY);
         field.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(BORDER),
-                BorderFactory.createEmptyBorder(8, 10, 8, 10)));
+                BorderFactory.createEmptyBorder(8, 12, 8, 12)));
+                
+        // Enforce a good default size for search boxes / inputs
+        field.setPreferredSize(new Dimension(250, 38));
+        field.setMinimumSize(new Dimension(150, 38));
     }
 
     public static void styleComboBox(JComboBox<?> comboBox) {
-        comboBox.setFont(new Font(FONT_FAMILY, Font.PLAIN, 13));
+        comboBox.setFont(new Font(FONT_FAMILY, Font.PLAIN, 14));
         comboBox.setBackground(SURFACE);
         comboBox.setForeground(TEXT);
         comboBox.setBorder(BorderFactory.createLineBorder(BORDER));
+        
+        // Enforce a good default size for dropdowns
+        comboBox.setPreferredSize(new Dimension(250, 38));
+        comboBox.setMinimumSize(new Dimension(150, 38));
     }
 
     public static void styleSpinner(JSpinner spinner) {
-        spinner.setFont(new Font(FONT_FAMILY, Font.PLAIN, 13));
+        spinner.setFont(new Font(FONT_FAMILY, Font.PLAIN, 14));
+        spinner.setPreferredSize(new Dimension(120, 38)); // Default spinner size
+        
         JComponent editor = spinner.getEditor();
         if (editor instanceof JSpinner.DefaultEditor) {
             JTextField field = ((JSpinner.DefaultEditor) editor).getTextField();
             styleTextField(field);
+            // Spinners usually need to be smaller than search boxes
+            field.setPreferredSize(new Dimension(100, 38)); 
         }
     }
 
     public static void styleTable(JTable table) {
-        table.setRowHeight(34);
+        table.setRowHeight(36); // Slightly taller rows
         table.setFont(new Font(FONT_FAMILY, Font.PLAIN, 13));
-        table.setSelectionBackground(new Color(219, 234, 254));
+        table.setSelectionBackground(new Color(224, 231, 255)); 
         table.setSelectionForeground(TEXT);
-        table.setGridColor(new Color(235, 240, 247));
+        table.setGridColor(BORDER);
         table.setShowVerticalLines(false);
         table.setFillsViewportHeight(true);
+        
         JTableHeader header = table.getTableHeader();
         header.setFont(new Font(FONT_FAMILY, Font.BOLD, 13));
-        header.setBackground(new Color(238, 243, 250));
+        header.setBackground(SURFACE);
         header.setForeground(TEXT);
         header.setReorderingAllowed(false);
+        header.setPreferredSize(new Dimension(header.getWidth(), 40)); // Taller header
+        
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,

@@ -14,11 +14,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * OrderService.java
- * Module 3: Order Management
- * @author Fatima
- */
 public class OrderService extends BaseService<Order> {
     @Override
     public boolean add(Order order) throws SQLException {

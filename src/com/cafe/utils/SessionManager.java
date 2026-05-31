@@ -3,7 +3,7 @@ package com.cafe.utils;
 /**
  * SessionManager.java
  * Module 1: Authentication & Dashboard
- * @author Imman Fatima
+ * @author Imman
  *
  * Keeps track of who is currently logged in.
  * Any module can call SessionManager.getCurrentUser() to find out.

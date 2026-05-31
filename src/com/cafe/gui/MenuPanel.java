@@ -3,7 +3,7 @@ package com.cafe.gui;
 /**
  * MenuPanel.java
  * Module 2: Menu & Inventory Management
- * @author Zainab
+ * @author Zainab Raza
  *
  * The main screen for managing the cafe menu.
  * Staff can add new items, edit prices, mark items unavailable, delete items.

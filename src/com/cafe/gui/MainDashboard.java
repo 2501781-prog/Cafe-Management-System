@@ -1,8 +1,8 @@
 package com.cafe.gui;
 
 /**
- * MainDashboard.java — Module 2: Zainab Raza
- * Stage 2: Dashboard + Menu & Inventory panels.
+ * MainDashboard.java — Module 3: Usman Tariq
+ * Stage 3: Dashboard + Menu + Customers + Orders panels.
  */
 
 import com.cafe.utils.UIUtils;
@@ -19,22 +19,30 @@ public class MainDashboard extends JFrame {
     private final CardLayout cardLayout;
     private final DashboardPanel dashboardPanel;
     private final MenuPanel menuPanel;
+    private final CustomerPanel customerPanel;
+    private final OrderPanel orderPanel;
     private JButton dashboardButton;
     private JButton menuButton;
+    private JButton customersButton;
+    private JButton ordersButton;
 
     public MainDashboard() {
         setTitle("Cafe Management System");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(1200, 720));
+        setMinimumSize(new Dimension(1280, 760));
         setLocationRelativeTo(null);
 
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
         dashboardPanel = new DashboardPanel();
-        menuPanel = new MenuPanel();
+        menuPanel      = new MenuPanel();
+        customerPanel  = new CustomerPanel();
+        orderPanel     = new OrderPanel();
 
         contentPanel.add(dashboardPanel, "DASHBOARD");
         contentPanel.add(menuPanel,      "MENU");
+        contentPanel.add(customerPanel,  "CUSTOMERS");
+        contentPanel.add(orderPanel,     "ORDERS");
 
         add(createSidebar(), BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
@@ -44,7 +52,7 @@ public class MainDashboard extends JFrame {
     private JPanel createSidebar() {
         JPanel sidebar = new JPanel(new BorderLayout());
         sidebar.setBackground(UIUtils.SIDEBAR);
-        sidebar.setPreferredSize(new Dimension(240, 720));
+        sidebar.setPreferredSize(new Dimension(260, 760));
 
         JPanel top = new JPanel(new BorderLayout());
         top.setOpaque(false);
@@ -52,7 +60,7 @@ public class MainDashboard extends JFrame {
         JLabel title = new JLabel("<html>Cafe<br>Management</html>");
         title.setForeground(Color.WHITE);
         title.setFont(new Font(UIUtils.FONT_FAMILY, Font.BOLD, 26));
-        JLabel sub = new JLabel("Module 2: Menu & Inventory");
+        JLabel sub = new JLabel("Module 3: Order Management");
         sub.setForeground(new Color(190, 203, 224));
         sub.setFont(new Font(UIUtils.FONT_FAMILY, Font.PLAIN, 12));
         top.add(title, BorderLayout.NORTH);
@@ -64,22 +72,20 @@ public class MainDashboard extends JFrame {
 
         dashboardButton = UIUtils.createNavButton("DB  Dashboard");
         menuButton      = UIUtils.createNavButton("MN  Menu & Inventory");
+        customersButton = UIUtils.createNavButton("CU  Customers");
+        ordersButton    = UIUtils.createNavButton("OR  Orders & Billing");
 
-        dashboardButton.addActionListener(e -> {
-            dashboardPanel.refreshStats();
-            setActive(dashboardButton);
-            cardLayout.show(contentPanel, "DASHBOARD");
-        });
-        menuButton.addActionListener(e -> {
-            menuPanel.loadAllItems();
-            setActive(menuButton);
-            cardLayout.show(contentPanel, "MENU");
-        });
+        dashboardButton.addActionListener(e -> { dashboardPanel.refreshStats(); setActive(dashboardButton); cardLayout.show(contentPanel, "DASHBOARD"); });
+        menuButton.addActionListener(e ->      { menuPanel.loadAllItems();      setActive(menuButton);      cardLayout.show(contentPanel, "MENU"); });
+        customersButton.addActionListener(e -> { customerPanel.loadCustomers(); setActive(customersButton); cardLayout.show(contentPanel, "CUSTOMERS"); });
+        ordersButton.addActionListener(e ->    { orderPanel.refreshAllData();   setActive(ordersButton);    cardLayout.show(contentPanel, "ORDERS"); });
 
         nav.add(dashboardButton);
         nav.add(menuButton);
+        nav.add(customersButton);
+        nav.add(ordersButton);
 
-        JLabel footer = new JLabel("<html>Zainab Raza — Module 2<br>OOP Lab Project</html>");
+        JLabel footer = new JLabel("<html>Usman Tariq — Module 3<br>OOP Lab Project</html>");
         footer.setForeground(new Color(150, 166, 190));
         footer.setFont(new Font(UIUtils.FONT_FAMILY, Font.PLAIN, 11));
         footer.setBorder(BorderFactory.createEmptyBorder(16, 22, 20, 22));
@@ -92,7 +98,7 @@ public class MainDashboard extends JFrame {
     }
 
     private void setActive(JButton active) {
-        for (JButton b : new JButton[]{dashboardButton, menuButton}) {
+        for (JButton b : new JButton[]{dashboardButton, menuButton, customersButton, ordersButton}) {
             if (b == null) continue;
             boolean on = b == active;
             b.setBackground(on ? UIUtils.PRIMARY : new Color(30, 41, 59));
